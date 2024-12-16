@@ -1,0 +1,71 @@
+---
+title: "Test {flowchart} with CONSORT diagram from safo example data"
+format:  html
+editor: visual
+---
+
+## Building a CONSORT Flowchart
+
+```{r setup}
+#| include: false
+library(tidyverse)
+library(janitor)
+library(flowchart)
+```
+
+## Starting the CONSORT diagram
+
+Look at the test data from safo
+
+```{r}
+#| echo: true
+data(safo)
+head(safo)
+names(safo)
+```
+
+Start a flowchart
+```{r}
+safo_fc <- safo |> 
+  as_fc()
+```
+
+Build this out, show how to modify the text size and position for a specific node. 
+Show how to View the safo_fc object table with fc_view("fc") and then modify the text size and position for a specific node. 
+
+
+```{r}
+
+text_exc <- paste0(
+  sum(safo$inclusion_crit == "Yes"),
+  " not met the inclusion criteria\n",
+  sum(safo$exclusion_crit == "Yes"),
+  " met the exclusion criteria"
+)
+
+safo_fc <- safo |> 
+  as_fc(label = "Patients assessed for eligibility") |>
+  fc_filter(!is.na(group), label = "Randomized", show_exc = TRUE) |> 
+  fc_split(group) |> 
+  fc_filter(itt == "Yes", label = "Included in ITT") |> 
+  fc_filter(pp == "Yes", label = "Included in PP") |> 
+    fc_modify(
+    ~ . |>
+      dplyr::mutate(
+      x = ifelse(id == 3, 0.75, x),
+      text_fs = ifelse(id == 3, 8, text_fs)
+      )
+  ) 
+
+safo_fc |> 
+  fc_draw()
+
+safo_fc |> 
+  fc_view("fc") |> 
+  View()
+
+```
+
+
+
+
