@@ -151,42 +151,58 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Start a flowchart</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>safo_fc <span class="ot">&lt;-</span> safo <span class="sc">|&gt;</span> </span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as_fc</span>()</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>safo_fc</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as_fc</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Build this out, show how to modify the text size and position for a specific node. Show how to View the safo_fc object table with fc_view(“fc”) and then modify the text size and position for a specific node.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>text_exc <span class="ot">&lt;-</span> <span class="fu">paste0</span>(</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sum</span>(safo<span class="sc">$</span>inclusion_crit <span class="sc">==</span> <span class="st">"Yes"</span>),</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">" not met the inclusion criteria</span><span class="sc">\n</span><span class="st">"</span>,</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sum</span>(safo<span class="sc">$</span>exclusion_crit <span class="sc">==</span> <span class="st">"Yes"</span>),</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="st">" met the exclusion criteria"</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>safo_fc <span class="ot">&lt;-</span> safo <span class="sc">|&gt;</span> </span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as_fc</span>(<span class="at">label =</span> <span class="st">"Patients assessed for eligibility"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fc_filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(group), <span class="at">label =</span> <span class="st">"Randomized"</span>, <span class="at">show_exc =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fc_split</span>(group) <span class="sc">|&gt;</span> </span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fc_filter</span>(itt <span class="sc">==</span> <span class="st">"Yes"</span>, <span class="at">label =</span> <span class="st">"Included in ITT"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fc_filter</span>(pp <span class="sc">==</span> <span class="st">"Yes"</span>, <span class="at">label =</span> <span class="st">"Included in PP"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">fc_modify</span>(</span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>    <span class="sc">~</span> . <span class="sc">|&gt;</span></span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>      dplyr<span class="sc">::</span><span class="fu">mutate</span>(</span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>      <span class="at">x =</span> <span class="fu">ifelse</span>(id <span class="sc">==</span> <span class="dv">3</span>, <span class="fl">0.75</span>, x),</span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>      <span class="at">text_fs =</span> <span class="fu">ifelse</span>(id <span class="sc">==</span> <span class="dv">3</span>, <span class="dv">8</span>, text_fs)</span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>      )</span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>  ) </span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>safo_fc <span class="sc">|&gt;</span> </span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fc_draw</span>(<span class="at">box_corners =</span> <span class="st">"sharp"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="flowchart_consort_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>safo_fc <span class="sc">|&gt;</span> </span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fc_view</span>(<span class="st">"fc"</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>$data
-# A tibble: 925 × 21
-      id inclusion_crit exclusion_crit chronic_heart_failure
-   &lt;int&gt; &lt;fct&gt;          &lt;fct&gt;          &lt;fct&gt;                
- 1     1 Yes            No             No                   
- 2     2 No             No             No                   
- 3     3 No             No             No                   
- 4     4 No             Yes            No                   
- 5     5 No             No             No                   
- 6     6 No             Yes            No                   
- 7     7 No             No             No                   
- 8     8 No             Yes            No                   
- 9     9 No             No             No                   
-10    10 No             No             No                   
-# ℹ 915 more rows
-# ℹ 17 more variables: expected_death_24h &lt;fct&gt;,
-#   polymicrobial_bacteremia &lt;fct&gt;,
-#   conditions_affect_adhrence &lt;fct&gt;,
-#   susp_prosthetic_valve_endocard &lt;fct&gt;,
-#   severe_liver_cirrhosis &lt;fct&gt;, acute_sars_cov2 &lt;fct&gt;,
-#   blactam_fosfomycin_hypersens &lt;fct&gt;, …
-
-$fc
-# A tibble: 1 × 17
+<pre><code># A tibble: 9 × 17
      id     x     y     n     N perc  text       type  group
-  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;int&gt; &lt;chr&gt; &lt;chr&gt;      &lt;chr&gt; &lt;lgl&gt;
-1     1   0.5   0.5   925   925 100   "Initial … init  NA   
+  &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;int&gt; &lt;chr&gt; &lt;chr&gt;      &lt;chr&gt; &lt;chr&gt;
+1     1  0.5  0.833   925   925 100   "Patients… init  &lt;NA&gt; 
+2     2  0.5  0.667   215   925 23.24 "Randomiz… filt… &lt;NA&gt; 
+3     3  0.75 0.75    710   925 76.76 "Excluded… excl… &lt;NA&gt; 
+4     4  0.25 0.5     105   215 48.84 "cloxacil… split clox…
+5     5  0.75 0.5     110   215 51.16 "cloxacil… split clox…
+6     6  0.75 0.333   110   110 100   "Included… filt… clox…
+7     7  0.25 0.333   104   105 99.05 "Included… filt… clox…
+8     8  0.75 0.167   106   110 96.36 "Included… filt… clox…
+9     9  0.25 0.167   101   104 97.12 "Included… filt… clox…
 # ℹ 8 more variables: just &lt;chr&gt;, text_color &lt;chr&gt;,
 #   text_fs &lt;dbl&gt;, text_fface &lt;dbl&gt;, text_ffamily &lt;lgl&gt;,
-#   text_padding &lt;dbl&gt;, bg_fill &lt;chr&gt;, border_color &lt;chr&gt;
-
-attr(,"class")
-[1] "fc"</code></pre>
+#   text_padding &lt;dbl&gt;, bg_fill &lt;chr&gt;, border_color &lt;chr&gt;</code></pre>
 </div>
 </div>
 </section>

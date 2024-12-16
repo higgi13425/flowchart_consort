@@ -58,11 +58,11 @@ safo_fc <- safo |>
   ) 
 
 safo_fc |> 
-  fc_draw()
+  fc_draw(box_corners = "sharp")
 
 safo_fc |> 
-  fc_view("fc") |> 
-  View()
+  fc_view("fc") 
+# can then use View() if needed
 
 ```
 
